@@ -20,7 +20,7 @@ void* __wrap_malloc(size_t size) {{
     if (__holden_malloc_fail_at > 0 && __holden_malloc_calls >= __holden_malloc_fail_at) {{
         return NULL; // Inyección de fallo de memoria
     }}
-    return malloc(size);
+    return __real_malloc(size);
 }}
 """,
     "fopen": """// Mock para fopen() generado por HOLDEN
@@ -29,12 +29,14 @@ void* __wrap_malloc(size_t size) {{
 static int __holden_fopen_calls = 0;
 static int __holden_fopen_fail_at = {fail_at};
 
+FILE* __real_fopen(const char* pathname, const char* mode);
+
 FILE* __wrap_fopen(const char* pathname, const char* mode) {{
     __holden_fopen_calls++;
     if (__holden_fopen_fail_at > 0 && __holden_fopen_calls >= __holden_fopen_fail_at) {{
         return NULL; // Inyección de fallo de apertura de archivo
     }}
-    return fopen(pathname, mode);
+    return __real_fopen(pathname, mode);
 }}
 """,
     "rand": """// Mock para rand() determinista generado por HOLDEN
