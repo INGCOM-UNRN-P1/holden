@@ -347,3 +347,12 @@ Podés encadenar `holden` con otras herramientas del ecosistema en una única l�
 holden scaffold-tests src/tda.c && make test
 ````
 
+---
+
+(manual-holden-seccion-plugins)=
+## 9. Extensión, Desarrollo de Plugins y API Python
+
+Para crear tus propias reglas, conectores de evaluación o integrar `holden` programáticamente en pipelines de CI/CD:
+
+- 👉 **Consultá la guía completa:** [Guía de Extensión y Creación de Plugins](plugins.md)
+
