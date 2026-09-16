@@ -26,3 +26,16 @@ def test_cli_generate_json():
     data = json.loads(res.stdout)
     assert data["funcion"] == "malloc"
     assert "__wrap_malloc" in data["codigo_c"]
+
+
+def test_cli_doctor():
+    res = runner.invoke(app, ["doctor"])
+    assert res.exit_code == 0
+    assert "Diagnóstico del Entorno HOLDEN" in res.stdout
+
+    res_json = runner.invoke(app, ["doctor", "--json"])
+    assert res_json.exit_code == 0
+    assert '"schema_version": "1.0.0"' in res_json.stdout
+    assert '"herramienta": "holden"' in res_json.stdout
+    assert '"ok": true' in res_json.stdout
+
