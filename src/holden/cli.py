@@ -13,7 +13,7 @@ from rich.syntax import Syntax
 from rich.table import Table
 
 from holden import __version__
-from holden.core.generator import PLANTILLAS_MOCKS, generar_mock
+from holden.core.generator import PLANTILLAS_MOCKS, FuncionNoSoportada, generar_mock
 
 console = Console()
 err_console = Console(stderr=True)
@@ -54,7 +54,14 @@ def generate_cmd(
     json_output: bool = typer.Option(False, "--json", help="Salida estructurada en JSON."),
 ) -> None:
     """Genera un archivo C con la implementación del mock y wrapper de la función."""
-    mock = generar_mock(funcion, fail_at=fail_at)
+    try:
+        mock = generar_mock(funcion, fail_at=fail_at)
+    except FuncionNoSoportada as exc:
+        if json_output:
+            print(json.dumps({"ok": False, "error": str(exc), "soportadas": sorted(PLANTILLAS_MOCKS)}, ensure_ascii=False))
+        else:
+            err_console.print(f"[bold red]{exc}[/bold red]")
+        raise typer.Exit(code=2)
 
     if output:
         output.write_text(mock.codigo_c, encoding="utf-8")

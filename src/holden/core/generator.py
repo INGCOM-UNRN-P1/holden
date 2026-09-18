@@ -52,6 +52,20 @@ int __wrap_rand(void) {{
 }
 
 
+# Prototipo real de cada función soportada. La cabecera genérica anterior
+# (`void* __wrap_x();`) era inválida para casi todas: fopen devuelve FILE* y
+# rand devuelve int.
+CABECERAS_MOCKS: Dict[str, str] = {
+    "malloc": "void* __wrap_malloc(size_t size);\nvoid* __real_malloc(size_t size);\n",
+    "fopen": "FILE* __wrap_fopen(const char* pathname, const char* mode);\nFILE* __real_fopen(const char* pathname, const char* mode);\n",
+    "rand": "int __wrap_rand(void);\n",
+}
+
+
+class FuncionNoSoportada(ValueError):
+    """Se pidió un mock para una función que HOLDEN no sabe generar."""
+
+
 def generar_mock(funcion: str, estrategia: str = "fail_after_n", **params) -> MockSpec:
     """Genera la especificación y código C del mock para la función solicitada."""
     fn = funcion.lower()
@@ -60,11 +74,18 @@ def generar_mock(funcion: str, estrategia: str = "fail_after_n", **params) -> Mo
 
     plantilla = PLANTILLAS_MOCKS.get(fn)
     if not plantilla:
-        codigo = f"// Mock genérico para {fn}\n"
-    else:
-        codigo = plantilla.format(fail_at=fail_at, seed=seed)
+        # Antes se devolvía un "mock genérico" que era solo un comentario, con
+        # exit 0 y una cabecera `void* __wrap_x();` de firma inválida: el
+        # usuario no se enteraba de que no había wrapper y recién fallaba el
+        # linker. No hay forma de inventar el comportamiento de una función
+        # arbitraria, así que se dice.
+        soportadas = ", ".join(sorted(PLANTILLAS_MOCKS))
+        raise FuncionNoSoportada(
+            f"HOLDEN no genera mocks para '{fn}'. Funciones soportadas: {soportadas}."
+        )
+    codigo = plantilla.format(fail_at=fail_at, seed=seed)
 
-    cabecera = f"// Declaraciones para mock de {fn}\nvoid* __wrap_{fn}();\n"
+    cabecera = f"// Declaraciones para mock de {fn}\n{CABECERAS_MOCKS[fn]}"
 
     return MockSpec(
         funcion_objetivo=fn,

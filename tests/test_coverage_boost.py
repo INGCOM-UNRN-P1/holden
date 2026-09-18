@@ -32,10 +32,13 @@ def test_cli_generate_file_and_rich(tmp_path):
     assert "__wrap_rand" in res2.stdout
 
 
-def test_generar_mock_generico():
-    mock = generar_mock("custom_fn")
-    assert mock.funcion_objetivo == "custom_fn"
-    assert "Mock genérico" in mock.codigo_c
+def test_generar_mock_de_funcion_no_soportada_falla_con_claridad():
+    """HOLDEN-D0301: antes devolvía un comentario vacío con exit 0."""
+    import pytest
+    from holden.core.generator import FuncionNoSoportada
+
+    with pytest.raises(FuncionNoSoportada, match="malloc"):
+        generar_mock("custom_fn")
 
 
 def test_cli_main_block(monkeypatch):

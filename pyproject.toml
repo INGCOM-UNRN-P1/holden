@@ -45,7 +45,9 @@ holden = "holden.cli:main"
 [project.entry-points."ripley.plugins"]
 mocks = "holden.ripley_plugin:HoldenPlugin"
 
-[project.optional-dependencies]
+[dependency-groups]
+# PEP 735: uv lo instala con un `uv sync` a secas; como extra opcional hacía falta
+# `--extra dev` y sin eso `.venv/bin/python -m pytest` no encontraba pytest.
 dev = [
     "pytest>=7.4.0",
 ]
