@@ -39,3 +39,11 @@ def test_cli_doctor():
     assert '"herramienta": "holden"' in res_json.stdout
     assert '"ok": true' in res_json.stdout
 
+
+
+def test_list_json():
+    """HOLDEN-D0402: `list` ofrece --json con el inventario de funciones."""
+    res = CliRunner().invoke(app, ["list", "--json"])
+    assert res.exit_code == 0
+    datos = json.loads(res.output)
+    assert {f["funcion"] for f in datos["funciones"]} == {"malloc", "fopen", "rand"}

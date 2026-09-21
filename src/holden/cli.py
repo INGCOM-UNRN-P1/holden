@@ -82,16 +82,28 @@ def generate_cmd(
 
 
 @app.command("list")
-def list_cmd() -> None:
+def list_cmd(
+    json_output: bool = typer.Option(False, "--json", help="Salida estructurada en JSON."),
+) -> None:
     """Lista las funciones con soporte de mocks preconfigurados."""
+    inventario = [
+        ("malloc", "Fallo forzado NULL", "Verifica si el alumno chequea retornos de memoria"),
+        ("fopen", "Fallo forzado NULL", "Verifica chequeo de existencia de archivos"),
+        ("rand", "Semilla fija determinista", "Reproducibilidad exacta en tests de azar"),
+    ]
+    if json_output:
+        print(json.dumps(
+            {"funciones": [{"funcion": f, "estrategia": e, "uso": u} for f, e, u in inventario]},
+            indent=2, ensure_ascii=False,
+        ))
+        return
+
     tabla = Table(title="Funciones Disponibles para Mocks en HOLDEN")
     tabla.add_column("Función", style="bold cyan")
     tabla.add_column("Estrategia")
     tabla.add_column("Uso Pedagógico")
-
-    tabla.add_row("malloc", "Fallo forzado NULL", "Verifica si el alumno chequea retornos de memoria")
-    tabla.add_row("fopen", "Fallo forzado NULL", "Verifica chequeo de existencia de archivos")
-    tabla.add_row("rand", "Semilla fija determinista", "Reproducibilidad exacta en tests de azar")
+    for fila in inventario:
+        tabla.add_row(*fila)
 
     console.print(tabla)
 
