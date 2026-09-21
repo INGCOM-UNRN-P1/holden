@@ -11,7 +11,9 @@ from typing import Any, Dict, List, Optional
 class MockSpec:
     """Especificación de un mock para inyectar en compilación o enlace."""
     funcion_objetivo: str       # "malloc", "fopen", "rand", "time"
-    estrategia: str             # "fail_after_n", "always_fail", "return_custom", "deterministic_seed"
+    # Etiqueta informativa: el comportamiento real lo fijan `parametros`
+    # (`fail_at` para malloc/fopen: falla desde la N-ésima llamada; `seed` para rand).
+    estrategia: str
     parametros: Dict[str, Any] = field(default_factory=dict)
     cabecera_c: str = ""
     codigo_c: str = ""
