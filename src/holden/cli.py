@@ -19,6 +19,7 @@ console = Console()
 err_console = Console(stderr=True)
 
 app = typer.Typer(
+    context_settings={"help_option_names": ["-h", "--help"]},
     name="holden",
     help="💉 HOLDEN — Generador de mocks e inyección controlada de fallos en funciones C (malloc, fopen, etc.).",
     add_completion=True,
