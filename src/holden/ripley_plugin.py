@@ -5,6 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Dict, List
 
+from holden import __version__
 from holden.core.generator import generar_mock
 
 
@@ -12,7 +13,7 @@ class HoldenPlugin:
     """Plugin de generación de mocks e inyección de fallos para Ripley."""
 
     name = "mocks"
-    version = "0.1.0"
+    version = __version__
 
     def is_available(self) -> bool:
         return True
