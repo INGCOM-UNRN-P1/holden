@@ -46,3 +46,31 @@ holden generate malloc --json
 # 3. Listar funciones mockeables soportadas
 holden list
 ```
+
+<!-- p1:referencia:inicio — generado por p1-tools/scripts/readme_generado.py: no editar a mano -->
+
+## Referencia rápida
+
+### Requisitos
+
+- Python ≥ 3.11 y [uv](https://docs.astral.sh/uv/getting-started/installation/).
+- Programas del sistema: `gcc`.
+
+| Sistema | `gcc` |
+|:--|:--|
+| Debian / Ubuntu | `sudo apt install gcc` |
+| Fedora | `sudo dnf install gcc` |
+| Windows | incluido en el entorno de la cátedra (MSYS2 UCRT64) |
+| macOS | `xcode-select --install` (clang como `gcc`) |
+
+### Comandos
+
+| Comando | Descripción |
+|:--|:--|
+| `holden generate` | Genera un archivo C con la implementación del mock y wrapper de la función. |
+| `holden list` | Lista las funciones con soporte de mocks preconfigurados. |
+| `holden doctor` | Verifica el estado del entorno de HOLDEN (Python, GCC). |
+
+Ayuda de cada comando: `holden <comando> -h`.
+
+<!-- p1:referencia:fin -->
